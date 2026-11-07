@@ -13,10 +13,18 @@ import com.klef.soa.service.MeetingService;
 @RequestMapping("/api/meetings")
 public class MeetingController {
 
+        @GetMapping("/")
+        public String test()
+        {
+            return "Meeting Service is up and running";
+        }
+
+
     @Autowired
     private MeetingService meetingService;
 
-    // Insert
+
+    
     @PostMapping
     public ResponseEntity<Meeting> insertMeeting(
             @RequestBody Meeting meeting) {
@@ -26,7 +34,7 @@ public class MeetingController {
         );
     }
 
-    // Display All
+    
     @GetMapping
     public ResponseEntity<List<Meeting>> getAllMeetings() {
 
@@ -35,7 +43,7 @@ public class MeetingController {
         );
     }
 
-    // Display By ID
+    
     @GetMapping("/{id}")
     public ResponseEntity<Meeting> getMeetingById(
             @PathVariable Long id) {
@@ -45,7 +53,7 @@ public class MeetingController {
         );
     }
 
-    // Update
+    
     @PutMapping("/{id}")
     public ResponseEntity<Meeting> updateMeeting(
             @PathVariable Long id,
@@ -56,7 +64,7 @@ public class MeetingController {
         );
     }
 
-    // Delete
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMeeting(
             @PathVariable Long id) {
@@ -66,7 +74,7 @@ public class MeetingController {
         return ResponseEntity.ok("Meeting deleted successfully");
     }
 
-    // Derived Query - Find By Name
+    
     @GetMapping("/name/{name}")
     public ResponseEntity<List<Meeting>> findByName(
             @PathVariable String name) {
@@ -76,7 +84,7 @@ public class MeetingController {
         );
     }
 
-    // Derived Query - Find By Type
+    
     @GetMapping("/type/{type}")
     public ResponseEntity<List<Meeting>> findByType(
             @PathVariable String type) {
