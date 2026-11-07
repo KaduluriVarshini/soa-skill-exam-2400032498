@@ -4,7 +4,11 @@ package com.klef.soa.repository;
 import java.util.List;
 import java.util.Optional;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -13,28 +17,32 @@ import org.springframework.context.ConfigurableApplicationContext;
 import com.klef.soa.MeetingServiceApplication;
 import com.klef.soa.entity.Meeting;
 
-public class MeetingRepositoryTest extends TestCase {
+public class MeetingRepositoryTest {
 
     private ConfigurableApplicationContext context;
     private MeetingRepository repository;
 
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    public void setUp() {
 
-        context = new SpringApplicationBuilder(MeetingServiceApplication.class)
+        context = new SpringApplicationBuilder(
+                MeetingServiceApplication.class)
                 .web(WebApplicationType.NONE)
                 .run();
 
         repository = context.getBean(MeetingRepository.class);
     }
 
-    protected void tearDown() throws Exception {
+    @AfterEach
+    public void tearDown() {
+
         if (context != null) {
             context.close();
         }
-        super.tearDown();
     }
 
+    // Test 1: Save Meeting
+    @Test
     public void testSaveMeeting() {
 
         Meeting meeting = createMeeting("JUnit Save", "Online");
@@ -45,6 +53,8 @@ public class MeetingRepositoryTest extends TestCase {
         assertNotNull(saved.getMeetingId());
     }
 
+    // Test 2: Find All Meetings
+    @Test
     public void testFindAllMeetings() {
 
         Meeting saved = repository.save(
@@ -66,6 +76,8 @@ public class MeetingRepositoryTest extends TestCase {
         assertTrue(found);
     }
 
+    // Test 3: Find Meeting By ID
+    @Test
     public void testFindMeetingById() {
 
         Meeting saved = repository.save(
@@ -75,10 +87,14 @@ public class MeetingRepositoryTest extends TestCase {
                 repository.findById(saved.getMeetingId());
 
         assertTrue(result.isPresent());
-        assertEquals(saved.getMeetingId(),
+
+        assertEquals(
+                saved.getMeetingId(),
                 result.get().getMeetingId());
     }
 
+    // Test 4: Find Meeting By Name
+    @Test
     public void testFindByName() {
 
         String name = "JUnit Name " + System.nanoTime();
@@ -92,6 +108,8 @@ public class MeetingRepositoryTest extends TestCase {
         assertEquals(name, result.get(0).getName());
     }
 
+    // Test 5: Find Meeting By Type
+    @Test
     public void testFindByType() {
 
         String type = "JUnit Type " + System.nanoTime();
@@ -105,6 +123,8 @@ public class MeetingRepositoryTest extends TestCase {
         assertEquals(type, result.get(0).getType());
     }
 
+    // Test 6: Delete Meeting
+    @Test
     public void testDeleteMeeting() {
 
         Meeting saved = repository.save(
@@ -117,6 +137,7 @@ public class MeetingRepositoryTest extends TestCase {
         assertFalse(repository.existsById(id));
     }
 
+    // Common Meeting Object
     private Meeting createMeeting(String name, String type) {
 
         Meeting meeting = new Meeting();
